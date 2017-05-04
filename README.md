@@ -49,6 +49,7 @@ The API will provide response as JSON data for each Shop in database.
 
 
 <b> FIND NEAREST SHOP </b>
+
 Customers can find the nearest shop by informing their geolocation in end-point "/findNearest" which receives latitude and longitude as parameters. 
 
 <b>For example:</b>
