@@ -15,10 +15,11 @@ import com.shop.rest.template.distance.DistanceElement;
 
 /**
  * 
- * @author fobm
  * Class designed to attend distance calculation requirements 
  * provided by google api
  *
+ * @author fobm
+ * 
  */
 @Service
 public class DistanceMatrixService {
