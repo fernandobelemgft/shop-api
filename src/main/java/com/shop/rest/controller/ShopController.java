@@ -17,6 +17,13 @@ import com.shop.exception.LocationNotFoundException;
 import com.shop.model.Shop;
 import com.shop.service.shops.ShopService;
 
+/**
+ * REST Controller responsible for receiving 
+ * requests from client side
+ * 
+ * @author fobm
+ *
+ */
 @RestController
 public class ShopController {
 	
