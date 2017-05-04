@@ -21,7 +21,7 @@ Testing units
 During the gradle or maven build the test classes will be executed testing its functionalities. 
 There are tests for each layer of this application
 
-
+You can check how the unit tests was developed by browsing the test folders.
 
 Functionalities:
 -
