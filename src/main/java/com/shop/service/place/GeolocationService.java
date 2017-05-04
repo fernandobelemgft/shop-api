@@ -11,10 +11,11 @@ import com.shop.rest.template.place.PlaceLocation;
 
 /**
  * 
- * @author fobm
  * Class designed to attend geolocation requirements 
  * provided by google api
  *
+ * @author fobm
+ * 
  */
 @Service
 public class GeolocationService {
