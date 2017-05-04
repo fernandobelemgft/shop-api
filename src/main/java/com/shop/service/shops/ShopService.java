@@ -13,6 +13,14 @@ import com.shop.rest.template.place.PlaceLocation;
 import com.shop.service.distance.DistanceMatrixService;
 import com.shop.service.place.GeolocationService;
 
+/**
+ * Service class designed to interact with {@link ShopRepository} and fire
+ * requests to other required services for example retrieving information 
+ * google api services
+ * 
+ * @author fobm
+ *
+ */
 @Service
 public class ShopService {
 
