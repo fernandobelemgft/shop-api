@@ -59,7 +59,7 @@ public class ShopController {
 		
 		ObjectNode newShopNode = buildNodeObjectForShop(newShop);
 		shopNode.setAll(newShopNode);
-        System.out.println(shopNode);
+
 		return shopNode;
 	}
 	
