@@ -77,27 +77,6 @@ public class ShopControllerTest {
 				MockMvcResultMatchers.status().isCreated());
 	}
 
-	// @Ignore
-	// @Test(expected=LocationNotFoundException.class)
-	// public void createShopWithInvalidDataTest() throws Exception {
-	//
-	// ObjectMapper mapper = new ObjectMapper();
-	//
-	// ObjectNode shopNode = mapper.createObjectNode();
-	// shopNode.put("shopName", "Oxford Shop");
-	//
-	// ObjectNode addressNode = mapper.createObjectNode();
-	// addressNode.put("number", "1");
-	// addressNode.put("postCode", "ERROR ADDRESS");
-	// shopNode.putPOJO("shopAddress", addressNode);
-	//
-	// MockHttpServletRequestBuilder builder =
-	// MockMvcRequestBuilders.post("/shops")
-	// .contentType(MediaType.APPLICATION_JSON)
-	// .content(shopNode.toString());
-	// this.mockMvc.perform(builder);
-	// }
-
 	@Test
 	public void findNearestTest() throws Exception {
 

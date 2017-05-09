@@ -15,13 +15,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.shop.exception.LocationNotFoundException;
 import com.shop.model.Shop;
 import com.shop.model.ShopAddress;
-import com.shop.service.distance.DistanceMatrixService;
-import com.shop.service.place.GeolocationService;
+import com.shop.service.distance.impl.DistanceMatrixServiceImpl;
+import com.shop.service.place.impl.GeolocationServiceImpl;
+import com.shop.service.shops.impl.ShopServiceImpl;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Import({ ShopService.class, GeolocationService.class,
-		DistanceMatrixService.class })
+@Import({ ShopServiceImpl.class, GeolocationServiceImpl.class,
+		DistanceMatrixServiceImpl.class })
 @DataJpaTest
 public class ShopServiceTest {
 

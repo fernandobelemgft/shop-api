@@ -1,5 +1,7 @@
 package com.shop.service.place;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +11,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.shop.exception.LocationNotFoundException;
 import com.shop.rest.template.place.PlaceLocation;
-import static org.assertj.core.api.Assertions.assertThat;
+import com.shop.service.place.impl.GeolocationServiceImpl;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Import(GeolocationService.class)
+@Import(GeolocationServiceImpl.class)
 public class GeolocationServiceTest {
 
 	@Autowired

@@ -15,11 +15,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.shop.exception.LocationNotFoundException;
 import com.shop.model.Shop;
 import com.shop.model.ShopAddress;
+import com.shop.service.distance.impl.DistanceMatrixServiceImpl;
 import com.shop.service.shops.ShopService;
+import com.shop.service.shops.impl.ShopServiceImpl;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Import({ ShopService.class, DistanceMatrixService.class })
+@Import({ ShopServiceImpl.class, DistanceMatrixServiceImpl.class })
 public class DistanceMatrixServiceTest {
 
 	@Autowired
