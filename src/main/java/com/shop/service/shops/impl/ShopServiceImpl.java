@@ -48,6 +48,7 @@ public class ShopServiceImpl implements ShopService {
 	 * @return operation result through @response variable
 	 * @throws LocationNotFoundException
 	 */
+	@Override
 	public Shop saveShop(Shop shop) throws LocationNotFoundException {
 
 		PlaceLocation place = null;
@@ -64,6 +65,7 @@ public class ShopServiceImpl implements ShopService {
 		return shop;
 	}
 
+	@Override
 	public Shop findByShopName(Shop shop) {
 		return shopRepository.findByShopName(shop.getShopName());
 	}
@@ -77,6 +79,7 @@ public class ShopServiceImpl implements ShopService {
 	 * @return
 	 * @throws LocationNotFoundException
 	 * */
+	@Override
 	public Shop findNearestShop(String latitude, String longitude)
 			throws LocationNotFoundException {
 
@@ -91,6 +94,7 @@ public class ShopServiceImpl implements ShopService {
 		return shop;
 	}
 
+	@Override
 	public void eraseDatabase() {
 		shopRepository.deleteAll();
 	}

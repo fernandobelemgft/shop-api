@@ -43,6 +43,7 @@ public class GeolocationServiceImpl implements GeolocationService {
 	 *             when the given information does not retrieve a valid
 	 *             PlaceLocation object
 	 */
+	@Override
 	public PlaceLocation getPlaceLocation(String postalCode, String number)
 			throws LocationNotFoundException {
 

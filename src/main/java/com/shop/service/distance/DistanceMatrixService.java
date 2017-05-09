@@ -7,7 +7,7 @@ import com.shop.model.Shop;
 
 public interface DistanceMatrixService {
 
-public Shop getNearest(List<Shop> shops, String originLat, String originLgt)
-		throws LocationNotFoundException;
+	public Shop getNearest(List<Shop> shops, String originLat, String originLgt)
+			throws LocationNotFoundException;
 
 }

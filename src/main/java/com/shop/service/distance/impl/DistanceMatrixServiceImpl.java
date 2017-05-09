@@ -48,6 +48,7 @@ public class DistanceMatrixServiceImpl implements DistanceMatrixService {
 	 *             when the given information is not valid to acquire users
 	 *             location
 	 */
+	@Override
 	public Shop getNearest(List<Shop> shops, String originLat, String originLgt)
 			throws LocationNotFoundException {
 
