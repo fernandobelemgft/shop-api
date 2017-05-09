@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PlaceDetails {
-	
+
 	@JsonProperty("formatted_address")
 	private String formattedAddress;
 
 	@JsonProperty("geometry")
 	private PlaceGeometry geometry;
-	
+
 	public String getFormattedAddress() {
 		return formattedAddress;
 	}

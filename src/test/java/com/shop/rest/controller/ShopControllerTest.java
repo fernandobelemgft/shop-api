@@ -32,77 +32,82 @@ public class ShopControllerTest {
 
 	@Autowired
 	private WebApplicationContext wac;
-	
+
 	@Autowired
 	private ShopService shopService;
 
 	@Before
 	public void setUp() throws LocationNotFoundException {
-		
+
 		shopService.eraseDatabase();
-		shopService.saveShop(new Shop("Newcastle Shop", new ShopAddress("1", "NE1 1AD")));
-		shopService.saveShop(new Shop("Derby Shop", new ShopAddress("1", "DE1 0GR")));
-		shopService.saveShop(new Shop("Oxford Shop", new ShopAddress("1", "OX1 1AA")));
-		
-		DefaultMockMvcBuilder builder = MockMvcBuilders.webAppContextSetup(this.wac);
-        this.mockMvc = builder.build();
-        
+		shopService.saveShop(new Shop("Newcastle Shop", new ShopAddress("1",
+				"NE1 1AD")));
+		shopService.saveShop(new Shop("Derby Shop", new ShopAddress("1",
+				"DE1 0GR")));
+		shopService.saveShop(new Shop("Oxford Shop", new ShopAddress("1",
+				"OX1 1AA")));
+
+		DefaultMockMvcBuilder builder = MockMvcBuilders
+				.webAppContextSetup(this.wac);
+		this.mockMvc = builder.build();
+
 	}
 
 	@Test
 	public void createShopTest() throws Exception {
-		
+
 		ObjectMapper mapper = new ObjectMapper();
-        
-        ObjectNode shopNode = mapper.createObjectNode();
-        shopNode.put("shopName", "Oxford Shop");
-        
-        ObjectNode addressNode = mapper.createObjectNode();
-        addressNode.put("number", "1");
-        addressNode.put("postCode", "OX1 1AA");
-        shopNode.putPOJO("shopAddress", addressNode);
 
-		MockHttpServletRequestBuilder builder =
-                 MockMvcRequestBuilders.post("/shops")
-                                 .contentType(MediaType.APPLICATION_JSON)
-                                 .content(shopNode.toString());
+		ObjectNode shopNode = mapper.createObjectNode();
+		shopNode.put("shopName", "Oxford Shop");
 
-		System.out.println("CONTENT: " + this.mockMvc.perform(builder).andReturn().getResponse().getContentAsString());
-		this.mockMvc.perform(builder)
-		         .andExpect(MockMvcResultMatchers.status()
-		                                         .isCreated());
+		ObjectNode addressNode = mapper.createObjectNode();
+		addressNode.put("number", "1");
+		addressNode.put("postCode", "OX1 1AA");
+		shopNode.putPOJO("shopAddress", addressNode);
+
+		MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
+				.post("/shops").contentType(MediaType.APPLICATION_JSON)
+				.content(shopNode.toString());
+
+		System.out.println("CONTENT: "
+				+ this.mockMvc.perform(builder).andReturn().getResponse()
+						.getContentAsString());
+		this.mockMvc.perform(builder).andExpect(
+				MockMvcResultMatchers.status().isCreated());
 	}
-	
-//	@Ignore
-//	@Test(expected=LocationNotFoundException.class)
-//	public void createShopWithInvalidDataTest() throws Exception {
-//		
-//		ObjectMapper mapper = new ObjectMapper();
-//        
-//        ObjectNode shopNode = mapper.createObjectNode();
-//        shopNode.put("shopName", "Oxford Shop");
-//        
-//        ObjectNode addressNode = mapper.createObjectNode();
-//        addressNode.put("number", "1");
-//        addressNode.put("postCode", "ERROR ADDRESS");
-//        shopNode.putPOJO("shopAddress", addressNode);
-//
-//		MockHttpServletRequestBuilder builder =
-//                 MockMvcRequestBuilders.post("/shops")
-//                                 .contentType(MediaType.APPLICATION_JSON)
-//                                 .content(shopNode.toString());
-//		this.mockMvc.perform(builder);
-//	}
-	
+
+	// @Ignore
+	// @Test(expected=LocationNotFoundException.class)
+	// public void createShopWithInvalidDataTest() throws Exception {
+	//
+	// ObjectMapper mapper = new ObjectMapper();
+	//
+	// ObjectNode shopNode = mapper.createObjectNode();
+	// shopNode.put("shopName", "Oxford Shop");
+	//
+	// ObjectNode addressNode = mapper.createObjectNode();
+	// addressNode.put("number", "1");
+	// addressNode.put("postCode", "ERROR ADDRESS");
+	// shopNode.putPOJO("shopAddress", addressNode);
+	//
+	// MockHttpServletRequestBuilder builder =
+	// MockMvcRequestBuilders.post("/shops")
+	// .contentType(MediaType.APPLICATION_JSON)
+	// .content(shopNode.toString());
+	// this.mockMvc.perform(builder);
+	// }
+
 	@Test
-	public void findNearestTest() throws Exception{
-		
-		MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/findNearest?latitude=51.7279805&longitude=-1.0259525");
-		
-		System.out.println("Find Nearest: " + this.mockMvc.perform(builder)
-				.andReturn().getResponse().getContentAsString());
-		
-	}
+	public void findNearestTest() throws Exception {
 
+		MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
+				.get("/findNearest?latitude=51.7279805&longitude=-1.0259525");
+
+		System.out.println("Find Nearest: "
+				+ this.mockMvc.perform(builder).andReturn().getResponse()
+						.getContentAsString());
+
+	}
 
 }

@@ -9,11 +9,10 @@ public class PlaceDetailsResponse {
 	@JsonProperty("results")
 	private PlaceDetails[] result;
 
-	
 	public PlaceDetails[] getResult() {
 		return result;
 	}
-	
+
 	public void setResult(PlaceDetails[] result) {
 		this.result = result;
 	}
@@ -22,6 +21,5 @@ public class PlaceDetailsResponse {
 	public String toString() {
 		return "PlaceDetailsResponse [result=" + result + "]";
 	}
-	
-	
+
 }

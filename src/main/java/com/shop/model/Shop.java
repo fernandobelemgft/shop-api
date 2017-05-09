@@ -8,12 +8,12 @@ public class Shop {
 
 	@Id
 	private String shopName;
-	
+
 	private ShopAddress shopAddress;
-	
+
 	public Shop() {
 	}
-	
+
 	public Shop(String shopName, ShopAddress shopAddress) {
 		super();
 		this.shopName = shopName;
@@ -38,10 +38,8 @@ public class Shop {
 
 	@Override
 	public String toString() {
-		return "Shop [shopName=" + shopName + ", shopAddress=" + shopAddress.getNumber() + " " 
-				+ "]";
+		return "Shop [shopName=" + shopName + ", shopAddress="
+				+ shopAddress.getNumber() + " " + "]";
 	}
-	
-	
 
 }

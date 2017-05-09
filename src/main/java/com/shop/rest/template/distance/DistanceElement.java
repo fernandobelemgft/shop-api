@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DistanceElement {
-	
+
 	@JsonProperty("distance")
 	private Distance distance;
 

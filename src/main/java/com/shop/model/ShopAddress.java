@@ -4,15 +4,15 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class ShopAddress {
-	
+
 	private String number;
-	
+
 	private String postCode;
-	
+
 	private String latitude;
-	
+
 	private String longitude;
-	
+
 	public ShopAddress() {
 	}
 
@@ -54,5 +54,4 @@ public class ShopAddress {
 		this.longitude = longitude;
 	}
 
-	
 }

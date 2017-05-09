@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 import com.shop.model.Shop;
 
 @Repository
-public interface ShopRepository extends CrudRepository<Shop, Long>{
-	
+public interface ShopRepository extends CrudRepository<Shop, Long> {
+
 	public Shop findByShopName(String name);
 
 }

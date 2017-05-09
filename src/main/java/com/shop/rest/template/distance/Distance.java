@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Distance {
 
 	@JsonProperty("text")
-	private String text; 
-	
+	private String text;
+
 	@JsonProperty("value")
 	private String value;
 
@@ -27,6 +27,5 @@ public class Distance {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	
-	
+
 }

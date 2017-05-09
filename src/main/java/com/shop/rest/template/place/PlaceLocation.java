@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PlaceLocation {
-	
+
 	@JsonProperty("lat")
 	private String lat;
-	
+
 	@JsonProperty("lng")
 	private String lng;
 
@@ -20,7 +20,6 @@ public class PlaceLocation {
 		this.lat = lat;
 	}
 
-	
 	public String getLng() {
 		return lng;
 	}
@@ -33,5 +32,5 @@ public class PlaceLocation {
 	public String toString() {
 		return "PlaceLocation [lat=" + lat + ", lng=" + lng + "]";
 	}
-	
+
 }

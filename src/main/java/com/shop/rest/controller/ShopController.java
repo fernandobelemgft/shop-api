@@ -18,64 +18,64 @@ import com.shop.model.Shop;
 import com.shop.service.shops.ShopService;
 
 /**
- * REST Controller responsible for receiving 
- * requests from client side
+ * REST Controller responsible for receiving requests from client side
  * 
  * @author fobm
  *
  */
 @RestController
 public class ShopController {
-	
+
 	@Autowired
 	ShopService shopService;
-	
+
 	@RequestMapping("/findAllShops")
 	public @ResponseBody Iterable<Shop> selectFull() {
 		return shopService.findAll();
 	}
 
 	/**
-	 * Receives a json object of shop which will be
-	 * inserted or updated
+	 * Receives a json object of shop which will be inserted or updated
+	 * 
 	 * @param shop
 	 * @return ObjectNode containing shop information
-	 * @throws LocationNotFoundException 
+	 * @throws LocationNotFoundException
 	 */
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(value = "/shops", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ObjectNode newShop(@RequestBody Shop shop) throws LocationNotFoundException {
+	public ObjectNode newShop(@RequestBody Shop shop)
+			throws LocationNotFoundException {
 
 		Shop previousVersion = shopService.findByShopName(shop);
-		
+
 		ObjectNode shopNode = new ObjectMapper().createObjectNode();
-		
-		if(previousVersion != null){
-        	ObjectNode previousVersionShopNode = buildNodeObjectForShop(previousVersion);
-        	shopNode.putPOJO("previousVersion", previousVersionShopNode);
-        }
-		
+
+		if (previousVersion != null) {
+			ObjectNode previousVersionShopNode = buildNodeObjectForShop(previousVersion);
+			shopNode.putPOJO("previousVersion", previousVersionShopNode);
+		}
+
 		Shop newShop = shopService.saveShop(shop);
-		
+
 		ObjectNode newShopNode = buildNodeObjectForShop(newShop);
 		shopNode.setAll(newShopNode);
 
 		return shopNode;
 	}
-	
-	
+
 	/**
 	 * Build a json object with the information of Shop object
+	 * 
 	 * @param shop
 	 * @return {@link ObjectNode} containing shop Information
 	 */
 	private ObjectNode buildNodeObjectForShop(Shop shop) {
-		
+
 		ObjectMapper mapper = new ObjectMapper();
 
 		ObjectNode shopNode = mapper.createObjectNode();
 		shopNode.put("shopName", shop.getShopName());
-		
+
 		ObjectNode addressNode = mapper.createObjectNode();
 		addressNode.put("number", shop.getShopAddress().getNumber());
 		addressNode.put("postCode", shop.getShopAddress().getPostCode());
@@ -84,23 +84,22 @@ public class ShopController {
 		shopNode.putPOJO("shopAddress", addressNode);
 		return shopNode;
 	}
-	
+
 	/**
-	 * Returns the nearest shop information which will be calculated 
-	 * through provided @latitude and  @longitude parameters
+	 * Returns the nearest shop information which will be calculated through
+	 * provided @latitude and @longitude parameters
 	 * 
 	 * @param latitude
 	 * @param longitude
-	 * @return 
-	 * @throws LocationNotFoundException 
+	 * @return
+	 * @throws LocationNotFoundException
 	 * */
 	@RequestMapping("/findNearest")
-	public Shop findNearest(
-			@RequestParam(value = "latitude") String latitude,
-			@RequestParam(value = "longitude") String longitude) throws LocationNotFoundException{
-		
+	public Shop findNearest(@RequestParam(value = "latitude") String latitude,
+			@RequestParam(value = "longitude") String longitude)
+			throws LocationNotFoundException {
+
 		return shopService.findNearestShop(latitude, longitude);
 	}
-	
 
 }
