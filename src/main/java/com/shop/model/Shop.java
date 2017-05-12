@@ -36,10 +36,5 @@ public class Shop {
 		this.shopAddress = shopAddress;
 	}
 
-	@Override
-	public String toString() {
-		return "Shop [shopName=" + shopName + ", shopAddress="
-				+ shopAddress.getNumber() + " " + "]";
-	}
 
 }

@@ -2,20 +2,17 @@ package com.shop.service.shops;
 
 import java.util.List;
 
-import com.shop.exception.LocationNotFoundException;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.shop.model.Shop;
 
 public interface ShopService {
 
-	public Shop saveShop(Shop shop) throws LocationNotFoundException;
+	public ObjectNode saveShop(Shop shop);
 
-	public Shop findByShopName(Shop shop);
-
-	public Shop findNearestShop(String latitude, String longitude)
-			throws LocationNotFoundException;
-
-	public void eraseDatabase();
+	public ObjectNode findNearestShop(String latitude, String longitude);
 
 	public List<Shop> findAll();
+
+	public void eraseDatabase();
 
 }

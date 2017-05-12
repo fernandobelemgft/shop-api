@@ -3,10 +3,14 @@ package com.shop.service.shops.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.shop.exception.LocationNotFoundException;
+import com.shop.exception.NoShopAvailableException;
 import com.shop.model.Shop;
 import com.shop.repository.ShopRepository;
 import com.shop.rest.template.place.PlaceLocation;
@@ -34,6 +38,8 @@ public class ShopServiceImpl implements ShopService {
 	@Autowired
 	DistanceMatrixService distanceMatrixService;
 
+	final static Logger logger = Logger.getLogger(ShopServiceImpl.class);
+
 	public List<Shop> findAll() {
 		ArrayList<Shop> shops = (ArrayList<Shop>) shopRepository.findAll();
 		return shops;
@@ -46,28 +52,41 @@ public class ShopServiceImpl implements ShopService {
 	 * @param number
 	 * @param postCode
 	 * @return operation result through @response variable
-	 * @throws LocationNotFoundException
 	 */
 	@Override
-	public Shop saveShop(Shop shop) throws LocationNotFoundException {
+	public ObjectNode saveShop(Shop shop) {
 
-		PlaceLocation place = null;
+		//tries to build shop location data inside Shop object
+		try {
+			shop = buildShopLocation(shop);
+		} catch (LocationNotFoundException e) {
+			logger.error(e.getMessage());
+			return buildNodeObjectForError(e.getMessage());
+		}
+		
+		// create main node for shop response.
+		ObjectNode shopNode = new ObjectMapper().createObjectNode();
 
-		// retrieves geolocation data from google api
-		place = geolocationService.getPlaceLocation(shop.getShopAddress()
-				.getPostCode(), shop.getShopAddress().getNumber());
+		// search for an existing shop object in data base .
+		Shop previousVersion = shopRepository
+				.findByShopName(shop.getShopName());
 
-		shop.getShopAddress().setLatitude(place.getLat());
-		shop.getShopAddress().setLongitude(place.getLng());
+		// verify if previousVersion != null to create a node of it self inside
+		// the response node.
+		if (previousVersion != null) {
+			ObjectNode previousVersionShopNode = buildNodeObjectForShop(previousVersion);
+			shopNode.putPOJO("previousVersion", previousVersionShopNode);
+		}
 
-		shopRepository.save(shop);
 
-		return shop;
-	}
+		// create a node for the new shop inside the response node.
+		Shop newShop = shopRepository.save(shop);
 
-	@Override
-	public Shop findByShopName(Shop shop) {
-		return shopRepository.findByShopName(shop.getShopName());
+		// adds new shop to node response
+		ObjectNode newShopNode = buildNodeObjectForShop(newShop);
+		shopNode.setAll(newShopNode);
+
+		return shopNode;
 	}
 
 	/**
@@ -77,26 +96,93 @@ public class ShopServiceImpl implements ShopService {
 	 * @param latitude
 	 * @param longitude
 	 * @return
-	 * @throws LocationNotFoundException
 	 * */
 	@Override
-	public Shop findNearestShop(String latitude, String longitude)
-			throws LocationNotFoundException {
+	public ObjectNode findNearestShop(String latitude, String longitude) {
 
 		Shop shop = null;
-		if (shopRepository.count() != 0) {
+
+		try {
+
 			shop = distanceMatrixService.getNearest(
 					(List<Shop>) shopRepository.findAll(), latitude, longitude);
-		} else {
-			throw new LocationNotFoundException("There is no Shops in Database");
+
+			return buildNodeObjectForShop(shop);
+
+		} catch (LocationNotFoundException | NoShopAvailableException e) {
+			logger.error(e.getMessage());
+			return buildNodeObjectForError(e.getMessage());
 		}
+
+	}
+
+	/**
+	 * Method created to attend test scenarios
+	 */
+	@Override
+	public void eraseDatabase() {
+		shopRepository.deleteAll();
+		logger.info("Database erased.");
+	}
+
+	/**
+	 * Populates current shop object with geolocation information
+	 * 
+	 * @param shop
+	 * @return
+	 * @throws LocationNotFoundException
+	 */
+	private Shop buildShopLocation(Shop shop) throws LocationNotFoundException {
+
+		PlaceLocation place = null;
+
+		// retrieves geolocation data from google api
+
+		place = geolocationService.getPlaceLocation(shop.getShopAddress()
+				.getPostCode(), shop.getShopAddress().getNumber());
+
+		shop.getShopAddress().setLatitude(place.getLat());
+		shop.getShopAddress().setLongitude(place.getLng());
 
 		return shop;
 	}
 
-	@Override
-	public void eraseDatabase() {
-		shopRepository.deleteAll();
+	/**
+	 * Build a json object with the information of Shop object
+	 * 
+	 * @param shop
+	 * @return {@link ObjectNode} containing shop Information
+	 */
+	private ObjectNode buildNodeObjectForShop(Shop shop) {
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		ObjectNode shopNode = mapper.createObjectNode();
+		shopNode.put("shopName", shop.getShopName());
+
+		ObjectNode addressNode = mapper.createObjectNode();
+
+		addressNode.put("number", shop.getShopAddress().getNumber());
+		addressNode.put("postCode", shop.getShopAddress().getPostCode());
+		addressNode.put("latitude", shop.getShopAddress().getLatitude());
+		addressNode.put("longitude", shop.getShopAddress().getLongitude());
+
+		shopNode.putPOJO("shopAddress", addressNode);
+
+		return shopNode;
+	}
+
+	/**
+	 * Builds a simple node object to provide information for consumer
+	 * 
+	 * @param message
+	 * @return
+	 */
+	private ObjectNode buildNodeObjectForError(String message) {
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode messageNode = mapper.createObjectNode();
+		messageNode.put("message", message);
+		return messageNode;
 	}
 
 }

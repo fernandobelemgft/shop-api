@@ -2,6 +2,8 @@ package com.shop.service.place;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.concurrent.ExecutionException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,8 @@ public class GeolocationServiceTest {
 	GeolocationService geolocationService;
 
 	@Test
-	public void getPlaceLocationTest() throws LocationNotFoundException {
+	public void getPlaceLocationTest() throws LocationNotFoundException,
+			InterruptedException, ExecutionException {
 		PlaceLocation place = geolocationService.getPlaceLocation("SE1 0AA",
 				"312");
 		assertThat(place.getLat()).isEqualTo("51.498409");

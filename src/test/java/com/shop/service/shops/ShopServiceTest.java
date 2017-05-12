@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.shop.exception.LocationNotFoundException;
 import com.shop.model.Shop;
 import com.shop.model.ShopAddress;
 import com.shop.service.distance.impl.DistanceMatrixServiceImpl;
@@ -30,7 +29,7 @@ public class ShopServiceTest {
 	ShopService shopService;
 
 	@Test
-	public void insertShopTest() throws LocationNotFoundException {
+	public void insertShopTest() {
 
 		// Number of shops in database should be 0
 		assertThat(shopService.findAll().size()).isEqualTo(0);
@@ -53,7 +52,7 @@ public class ShopServiceTest {
 	}
 
 	@Test
-	public void findNearestShopTest() throws LocationNotFoundException {
+	public void findNearestShopTest() {
 
 		// Number of shops in database should be 0
 		assertThat(shopService.findAll().size()).isEqualTo(0);
@@ -68,32 +67,18 @@ public class ShopServiceTest {
 		// Number of shops in database should be 3
 		assertThat(shopService.findAll().size()).isEqualTo(3);
 
-		Shop shop = null;
-
 		// Whickham, Newcastle upon Tyne NE16, UK
-		shop = shopService.findNearestShop("54.944116", "-1.674552");
-		assertThat(shop.getShopName()).isEqualTo("Newcastle Shop");
+		String newCastleShop = shopService.findNearestShop("54.944116", "-1.674552").get("shopName").asText();
+		assertThat(newCastleShop).isEqualTo("Newcastle Shop");
 
 		// Platt Fields Park, Manchester M14 6LA, UK
-		shop = shopService.findNearestShop("53.4504731", "-2.2221518");
-		assertThat(shop.getShopName()).isEqualTo("Manchester Shop");
+		String manchesterShop = shopService.findNearestShop("53.4504731", "-2.2221518").get("shopName").asText();
+		assertThat(manchesterShop).isEqualTo("Manchester Shop");
 
 		// Belle Vale, Liverpool L25, UK
-		shop = shopService.findNearestShop("53.3953587", "-2.8629684");
-		assertThat(shop.getShopName()).isEqualTo("Liverpool Shop");
+		String liverpoolShop = shopService.findNearestShop("53.3953587", "-2.8629684").get("shopName").asText();
+		assertThat(liverpoolShop).isEqualTo("Liverpool Shop");
 
-	}
-
-	@Test(expected = LocationNotFoundException.class)
-	public void findNearestShopWithEmptyShopListTest()
-			throws LocationNotFoundException {
-
-		// Number of shops in database should be 0
-		shopService.eraseDatabase();
-		assertThat(shopService.findAll().size()).isEqualTo(0);
-
-		// perform search
-		shopService.findNearestShop("54.944116", "-1.674552");
 	}
 
 }

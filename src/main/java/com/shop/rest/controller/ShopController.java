@@ -1,5 +1,9 @@
 package com.shop.rest.controller;
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,10 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.shop.exception.LocationNotFoundException;
 import com.shop.model.Shop;
 import com.shop.service.shops.ShopService;
 
@@ -29,8 +32,28 @@ public class ShopController {
 	@Autowired
 	ShopService shopService;
 
-	@RequestMapping("/findAllShops")
-	public @ResponseBody Iterable<Shop> selectFull() {
+	@Autowired
+	RequestMappingHandlerMapping requestMappingHandlerMapping;
+
+	/**
+	 * Default end-point of API Anything that does not match with available
+	 * end-points will be redirected to findAllShops
+	 * 
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(method = RequestMethod.GET)
+	void defaultRedirect(HttpServletResponse response) throws IOException {
+		response.sendRedirect("/findAllShops");
+	}
+
+	/**
+	 * Simple end-point that returns all shops records in database
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/findAllShops", method = RequestMethod.GET)
+	public @ResponseBody Iterable<Shop> findAll() {
 		return shopService.findAll();
 	}
 
@@ -39,50 +62,21 @@ public class ShopController {
 	 * 
 	 * @param shop
 	 * @return ObjectNode containing shop information
-	 * @throws LocationNotFoundException
+	 * @throws IOException
 	 */
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(value = "/shops", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ObjectNode newShop(@RequestBody Shop shop)
-			throws LocationNotFoundException {
+	public ObjectNode newShop(HttpServletResponse response,
+			@RequestBody Shop shop) throws IOException {
 
-		Shop previousVersion = shopService.findByShopName(shop);
-
-		ObjectNode shopNode = new ObjectMapper().createObjectNode();
-
-		if (previousVersion != null) {
-			ObjectNode previousVersionShopNode = buildNodeObjectForShop(previousVersion);
-			shopNode.putPOJO("previousVersion", previousVersionShopNode);
+		if (isInvalid(shop)) {
+			response.sendError(400, "Invalid parameters");
+			// return statement after calling sendError to prevent further
+			// processing.
+			return null;
 		}
 
-		Shop newShop = shopService.saveShop(shop);
-
-		ObjectNode newShopNode = buildNodeObjectForShop(newShop);
-		shopNode.setAll(newShopNode);
-
-		return shopNode;
-	}
-
-	/**
-	 * Build a json object with the information of Shop object
-	 * 
-	 * @param shop
-	 * @return {@link ObjectNode} containing shop Information
-	 */
-	private ObjectNode buildNodeObjectForShop(Shop shop) {
-
-		ObjectMapper mapper = new ObjectMapper();
-
-		ObjectNode shopNode = mapper.createObjectNode();
-		shopNode.put("shopName", shop.getShopName());
-
-		ObjectNode addressNode = mapper.createObjectNode();
-		addressNode.put("number", shop.getShopAddress().getNumber());
-		addressNode.put("postCode", shop.getShopAddress().getPostCode());
-		addressNode.put("latitude", shop.getShopAddress().getLatitude());
-		addressNode.put("longitude", shop.getShopAddress().getLongitude());
-		shopNode.putPOJO("shopAddress", addressNode);
-		return shopNode;
+		return shopService.saveShop(shop);
 	}
 
 	/**
@@ -92,14 +86,44 @@ public class ShopController {
 	 * @param latitude
 	 * @param longitude
 	 * @return
-	 * @throws LocationNotFoundException
+	 * @throws IOException
 	 * */
-	@RequestMapping("/findNearest")
-	public Shop findNearest(@RequestParam(value = "latitude") String latitude,
-			@RequestParam(value = "longitude") String longitude)
-			throws LocationNotFoundException {
+	@RequestMapping(value = "/findNearest", method = RequestMethod.GET)
+	public ObjectNode findNearest(HttpServletResponse response,
+			@RequestParam(value = "latitude", required = true) String latitude,
+			@RequestParam(value = "longitude", required = true) String longitude)
+			throws IOException {
+
+		if (latitude.isEmpty() || latitude.isEmpty()) {
+			response.sendError(400, "Empty parameter not allowed");
+			// return statement after calling sendError to prevent further
+			// processing.
+			return null;
+		}
 
 		return shopService.findNearestShop(latitude, longitude);
 	}
 
+	/**
+	 * Verify if Shop object contains invalid parameters
+	 * 
+	 * @param shop
+	 * @return
+	 */
+	private boolean isInvalid(Shop shop) {
+
+		boolean isInvalid = false;
+
+		if (shop.getShopName() == null || shop.getShopName().isEmpty()
+				|| shop.getShopName() == null || shop.getShopAddress() == null
+				|| shop.getShopAddress().getNumber() == null
+				|| shop.getShopAddress().getNumber().isEmpty()
+				|| shop.getShopAddress().getPostCode() == null
+				|| shop.getShopAddress().getPostCode().isEmpty()) {
+
+			isInvalid = true;
+		}
+
+		return isInvalid;
+	}
 }

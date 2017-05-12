@@ -24,19 +24,23 @@ public class GeolocationServiceImpl implements GeolocationService {
 	 * google api key inject through application.properties file
 	 */
 	private final String key;
-
-	private static final String PLACE_DETAILS_URL = "https://maps.googleapis.com/maps/api/geocode/json?address=%s&components=postal_code:%s&key=%s";
+	
+	/**
+	 * google api url inject through application.properties file
+	 */
+	private final String url;
 
 	@Autowired
-	public GeolocationServiceImpl(@Value("${api.geolocation.key}") String key) {
+	public GeolocationServiceImpl(@Value("${api.geolocation.key}") String key, @Value("${api.geolocation.url}") String url) {
 		this.key = key;
+		this.url = url;
 	}
 
 	/**
 	 * Returns the {@link PlaceLocation} object which contains the longitude and
 	 * latitude data required in Shop object
 	 * 
-	 * @param postalCode
+	 * @param postCode
 	 * @param number
 	 * @return {@link PlaceLocation}
 	 * @throws LocationNotFoundException
@@ -44,18 +48,18 @@ public class GeolocationServiceImpl implements GeolocationService {
 	 *             PlaceLocation object
 	 */
 	@Override
-	public PlaceLocation getPlaceLocation(String postalCode, String number)
+	public PlaceLocation getPlaceLocation(String postCode, String number)
 			throws LocationNotFoundException {
 
-		String formmatedURL = String.format(PLACE_DETAILS_URL, number,
-				postalCode, key);
-
+		String formattedURL = String.format(url, number,
+				postCode, key);
+		
 		PlaceDetailsResponse response = new RestTemplate().getForObject(
-				formmatedURL, PlaceDetailsResponse.class);
-
+				formattedURL, PlaceDetailsResponse.class);
+		
 		if (response.getResult().length == 0) {
 			throw new LocationNotFoundException(
-					"Location not found - Postal code: " + postalCode
+					"Location not found - Post Code: " + postCode
 							+ ", number: " + number);
 		}
 

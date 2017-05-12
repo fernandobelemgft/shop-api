@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.shop.exception.LocationNotFoundException;
+import com.shop.exception.NoShopAvailableException;
 import com.shop.model.Shop;
 import com.shop.model.ShopAddress;
 import com.shop.service.distance.impl.DistanceMatrixServiceImpl;
@@ -45,7 +46,7 @@ public class DistanceMatrixServiceTest {
 	}
 
 	@Test
-	public void getNearestTest() throws LocationNotFoundException {
+	public void getNearestTest() throws LocationNotFoundException, NoShopAvailableException {
 
 		assertThat(shopList.size()).isEqualTo(3);
 
@@ -68,13 +69,13 @@ public class DistanceMatrixServiceTest {
 
 	@Test(expected = LocationNotFoundException.class)
 	public void getNearestShopInvalidLocation()
-			throws LocationNotFoundException {
+			throws LocationNotFoundException, NoShopAvailableException {
 		distanceMatrix.getNearest(shopList, "", "");
 	}
 
 	@Test(expected = LocationNotFoundException.class)
 	public void getNearestShopInvalidLocationData()
-			throws LocationNotFoundException {
+			throws LocationNotFoundException, NoShopAvailableException {
 		distanceMatrix.getNearest(shopList, "error", "error");
 	}
 
