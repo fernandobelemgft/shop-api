@@ -77,6 +77,7 @@ Key Technologies:
 - Springboot 1.5.3
 - Hibernate and JPA for entity management and crud operation
 - Jackson API for json manipulation
+- Log4j 
 - Gradle
 - Maven
 - Featuring Google Geocode/DistanceMatrix APIs
