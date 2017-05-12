@@ -1,5 +1,19 @@
 # Shop API
 
+Questions
+-
+<b>How you would expand this solution, given a longer development period? </b>
+- I would create security and access authentication for every service, and of course I would expand the functionalities but this part I will let to the product owner to decide.
+
+<b>How would you go about testing this solution?</b>
+- I prepared a set of unit tests to test each part separately and integration tests which hits each end-point.
+
+<b>How would you integrate this solution into an existing collection of solutions used by the Retail Manager?</b>
+- Solutions can be brought together through service registration technologies such as Spring Cloud and Netflix's Eureka. Although I never done it before in corporate scenario.
+
+<b>How would you go about deploying this solution to production systems ?</b>
+- DB has its own deployment infrastructure which I'am familiar such as Team City, Jenkins, uDeploy and DAP. 
+  But considering an external environment we have some more options like Spring Cloud, Heroku, Amanzon Services.
 
 
 Description
@@ -16,12 +30,12 @@ Running with Maven
 Go to directory of pom.xml file and use ```mvn install``` command.
 The “target” folder will be generated, move to that folder and run ```java –jar shop-api-0.0.1-SNAPSHOT.jar```
 
-Testing units
+Testing 
 -
 During the gradle or maven build the test classes will be executed testing its functionalities. 
-There are tests for each layer of this application
+There are tests for each layer of this application and a Integration Test class which hits each end-point and process the entire flux.
 
-You can check how the unit tests was developed by browsing the test folders.
+You can check how tests was developed by browsing the test folder.
 
 Functionalities:
 -
