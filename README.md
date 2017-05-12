@@ -13,7 +13,7 @@ Questions
 
 <b>How would you go about deploying this solution to production systems ?</b>
 - DB has its own deployment infrastructure which I'am familiar such as Team City, Jenkins, uDeploy and DAP. 
-  But considering an external environment we have some more options like Spring Cloud, Heroku, Amanzon Services.
+  But considering an external environment we have some more options like Spring Cloud, Heroku and Amanzon Services.
 
 
 Description
